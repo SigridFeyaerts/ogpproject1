@@ -4,7 +4,7 @@ import ogp.framework.util.ModelException;
 
 /**
  * A class of units characterised by their name, position,
- * weight, agility, strength, toughness and default behaviour. TODO...(limits,...)test
+ * weight, agility, strength, toughness and default behaviour. TODO...(limits,...)
  * 
  * @version 1.0
  * @author Sigrid Feyaerts, Eleanor Van Looy
