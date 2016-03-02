@@ -1,27 +1,55 @@
 package hillbillies.model;
 import be.kuleuven.cs.som.annotate.*;
+import ogp.framework.util.ModelException;
 
-
+/**
+ * A class of units characterised by their name, position,
+ * weight, agility, strength, toughness and default behaviour. TODO...(limits,...)
+ * 
+ * @version 1.0
+ * @author Sigrid Feyaerts, Eleanor Van Looy
+ */
 public class Unit {
 	private String name;
-	private int strength;
-	private int weight;
-	private int agility;
-	private int toughness;
-	private double [] position;
-	private double orientation;
-	private int lc = 1;
-	private int hitpoints;
-	private int staminapoints;
-	private double vw;
-	private double vb;
-	private double currentSpeed;
-	private double vs;
-	private double[] targetposition;
-	private double[] v;
-	private double distanceToGo;
+	private int strength,weight,agility,toughness,lc = 1,hitpoints,staminaPoints;
+	private double[] position,targetposition,v;
+	private double orientation,vw,vb,vs,currentSpeed,distanceToGo;
 	
-	
+	/**
+	 * Initialize this new unit with given name, position, weight, strength, 
+	 * agility, toughness and state of default behaviour. 
+	 * 
+	 * @param 	name
+	 * 			The name of the unit.
+	 * @param 	initialPosition
+	 * 			The initial position of the unit, as an array with 3 elements
+	 *          {x, y, z}.
+	 * @param 	weight
+	 * 			The initial weight of the unit.
+	 * @param 	agility
+	 * 			The initial agility of the unit.
+	 * @param 	strength
+	 * 			The initial strength of the unit.
+	 * @param 	toughness
+	 * 			The initial toughness of the unit.
+	 * @param 	enableDefaultBehaviour
+	 * 			Whether the default behaviour of the unit is enabled.
+	 * @post	
+	 * @throws 	ModelException
+	 *          A precondition was violated or an exception was thrown.
+	 */
+	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
+			boolean enableDefaultBehaviour) throws ModelException{
+		setName(name);
+		setCubeCoordinates(initialPosition);
+		setWeight(weight);
+		setAgility(agility);
+		setStrength(strength);
+		setToughness(toughness);
+		setEnableDefaultBehaviour(enableDefaultBehaviour);
+		
+		
+	}
 	
 	@Basic
 	public String getName(){
@@ -130,7 +158,7 @@ public class Unit {
 	}
 	@Basic
 	public int getCurrentStaminaPoints(){
-		return this.staminapoints;
+		return this.staminaPoints;
 	}
 	@Basic
 	public double getOrientation(){
