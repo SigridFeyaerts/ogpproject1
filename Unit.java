@@ -69,6 +69,21 @@ public class Unit {
 		return newcoordinates;
 		
 	}
+	/**
+	 * Set the initial position of the cube occupied by the unit to the given initial position.
+	 * 
+	 * @param 	initialPositionCube
+	 * 			The given initial position of the cube occupied by the unit. This is given by rounding down the 
+	 * 			coordinates of the unit's position to integer numbers.
+	 * @post	If ... limitations. (defensively)//TODO
+	 */
+	 private void setCubeCoordinate(double[] initialPosition) {
+		 int dim = 3;
+		 int[] cubeCoordinate= new int[dim];
+		 for(int i=0; i<dim; i++){
+			 cubeCoordinate[i]=(int)Math.floor(initialPosition[i]);
+		 }
+	}
 	@Basic
 	public int getStrength() {
 		return this.strength;
