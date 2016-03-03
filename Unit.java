@@ -50,20 +50,42 @@ public class Unit {
 		
 		
 	}
-	
+	/**
+	 * Return the name of the unit.
+	 */
 	@Basic
 	public String getName(){
 		return this.name;
 	
 	}
+	/**
+	 * Set the name of this unit to the given name.
+	 * 
+	 * @param 	name
+	 * 			The new name of the unit.
+	 * @post	The new name of this unit is equal to the given name.
+	 * 			| new.getName() == name
+	 * @throws 	ModelException
+	 * 			The given name is not valid for any unit.
+	 * 			| ! isValidName(name)
+	 */
 	public void setName(Unit unit, String newname){
-		
+		if (!isValidName(name))
+			throw new ModelException(name);
+		this.name = name;
 		
 	}
+	/**
+	 * Returns the initial position of the unit.
+	 */
 	@Basic
 	public double[] getPosition(){
 		return this.position;		
 	}
+	/**
+	 * Returns the initial position of the cube occupied by the unit.
+	 * @return ... of @Basic?
+	 */
 	public int [] getCubeCoordinates() {
 		int newcoordinates[]= {(int)(Math.floor(this.getPosition()[0])),(int)(Math.floor(this.getPosition()[1])),(int)(Math.floor(this.getPosition()[2]))};
 		return newcoordinates;
@@ -84,23 +106,29 @@ public class Unit {
 			 cubeCoordinate[i]=(int)Math.floor(initialPosition[i]);
 		 }
 	}
+	/**
+	 * Returns the strength of the unit.
+	 */
 	@Basic
 	public int getStrength() {
 		return this.strength;
 		
 	}
 	/**
-	 * 
-	 * @param unit
-	 * @param newstrength
-	 * @post ...
+	 * Set the strength of the unit to the given strength.
+	 * @param 	newstrength //Waarom niet gewoon strength?
+	 * 		The new strength of the unit.
+	 * @post If the given strength is an integer number with a value less than 0, the new strength of this 
+	 * 	unit is given by 0.
 	 *       | if(newstrength <=0) 
 	 *       |  then  new.getStrength ==1
-	 * @post ...
+	 * @post If the given strength is an integer number with a value greater than 200, the new strength of this 
+	 * 	 unit is given by 200.
 	 *       | if(newstength >=200)
 	 *       |  then new.getStrength ==200
-	 * @post ...
-	 *       | if(0<newstrength<200)
+	 * @post If the given strength is an integer number with a value ranging from 1 to 200, inclusively, 
+	 * 	 the new strength of this unit is given by the given strength.
+	 *       | if(0<newstrength<200) // moet dat niet ook = aan 0 en 200
 	 *       |  then new.getStrength == newstrength
 	 *     
 	 */
@@ -113,6 +141,9 @@ public class Unit {
 			this.strength = newstrength;
 		
 	}
+	/**
+	 * Returns the weight of the unit.
+	 */
 	@Basic
 	public int getWeight() {
 		return this.weight;
@@ -131,11 +162,30 @@ public class Unit {
 		else
 			this.weight = newweight;
 	}
+	/**
+	 * Returns the agility of the unit.
+	 */
 	@Basic 
 	public int getAgility(){
 		return this.agility;
 	}
-	
+	/**
+	 * Set the agility of the unit to the given agility.
+	 * @param 	agility
+	 * 		The new agility of the unit.
+	 * @post If the given agility is an integer number with a value less than 0, the new agility of this 
+	 * 	unit is given by 0.
+	 *       | if(newagility <=0) 
+	 *       |  then  new.getAgility ==1
+	 * @post If the given agility is an integer number with a value greater than 200, the new agility of this 
+	 * 	 unit is given by 200.
+	 *       | if(newagility >=200)
+	 *       |  then new.getAgility ==200
+	 * @post If the given agility is an integer number with a value ranging from 1 to 200, inclusively, 
+	 * 	 the new agility of this unit is given by the given agility.
+	 *       | if(0<newagility<200) // moet dat niet ook = aan 0 en 200
+	 *       |  then new.getAgility == newAgility
+	 */
 	public void setAgility(int newagility){
 		if (newagility <=0)
 			this.agility = 1;
