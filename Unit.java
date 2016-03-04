@@ -336,7 +336,7 @@ public class Unit {
 		int y;
 		int z;
 		
-		while (this.getCubeCoordinate()!= cube); do{
+		while (this.getCubeCoordinate()!= cube){
 			
 			if (this.getCubeCoordinate()[0]== cube[0])
 				x =0;
