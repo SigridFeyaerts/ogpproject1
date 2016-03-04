@@ -356,7 +356,7 @@ public class Unit {
 				z = 1;
 			else 
 				z = -1;
-			moveToAdjacent(x,y,z);
+			this.moveToAdjacent(x,y,z);
 		}
 				
 	}
