@@ -11,10 +11,11 @@ import ogp.framework.util.ModelException;
  */
 public class Unit {
 	private String name;
-	private int strength,weight,agility,toughness,lc = 1,hitpoints,staminaPoints;
-	private double[] position,targetposition,v;
-	private double orientation,vw,vb,vs,currentSpeed,distanceToGo;
-	
+	private int strength,weight,agility,toughness,lc = 1;
+	private double[] position,targetposition,v,endTargetPosition;
+	private double orientation,vw,vb,vs,currentSpeed,distanceToGo,hitpoints,staminaPoints,workTime,restTime,minRestTime;
+
+
 	/**
 	 * Initialize this new unit with given name, position, weight, strength, 
 	 * agility, toughness and state of default behaviour. 
@@ -208,21 +209,21 @@ public class Unit {
 		
 	}
 	@Basic
-	public int getMaxHitPoints (){
+	public double getMaxHitPoints (){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 		
 	}
 	@Basic
-	public int getCurrentHitPoints(){
+	public double getCurrentHitPoints(){
 		return this.hitpoints;
 		
 	}
 	@Basic
-	public int getMaxStaminaPoints(){
+	public double getMaxStaminaPoints(){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
 	@Basic
-	public int getCurrentStaminaPoints(){
+	public double getCurrentStaminaPoints(){
 		return this.staminaPoints;
 	}
 	@Basic
@@ -282,16 +283,80 @@ public class Unit {
 					this.getCurrentSpeed()*(targetposition[1]-this.getPosition()[1])/distanceToGo,
 					this.getCurrentSpeed()*(targetposition[2]-this.getPosition()[2])/distanceToGo};
 
-		    if (distanceToGo < norm(v)*dt){		
+		   if (distanceToGo > norm(v)*dt){		
 			
 			this.position = {this.getPosition()[0] + v[0] * dt, this.getPosition()[1]+ v[1]*dt, this.getPosition()[2]+ v[2]*dt};
 			
 			this.setOrientation(Math.atan2(v[0],v[1]));
 		    }
+		    else 
+		    	this.position = this.targetposition;
+		        if (this.endTargetPosition == null)
+		        	this.isMoving = false;
+		    if (this.position == this.endTargetPosition){
+		    	this.isMoving = false;
+		    	this.endTargetPosition = null;
+		    }
+		    
 		}
 	    //Stamina points
 		if (isSprinting)
-	    
+	    //working
+		if (this.isWorking){
+			if ((this.workTime - dt)>0){
+				this.workTime = this.workTime - dt;
+			}
+			else{
+				this.isWorking = false;
+				this.workTime = 0;
+			}
+		}
+		//resting in 3 min 
+		double timeTillRest;
+		if (!this.isResting){
+			if (timeTillRest + dt >= 3){
+				this.isResting = true;
+				timeTillRest = 0;
+			}
+			else 
+				timeTillRest = timeTillRest + dt;
+				
+		}
+		//in rust (hitpoints, staminapoints of beeindigen, in minimum rusttijd?) 
+		if (this.isResting){
+			if (this.inMinRestTime){
+				if ((minRestTime - dt) <= 0){
+					this.inMinRestTime = false;
+					minRestTime = 0;
+				}
+				
+				else 
+					minRestTime = minRestTime - dt;
+					
+				
+			}
+			
+			restTime = restTime + dt;
+			
+			if (this.getCurrentHitPoints()==this.getMaxHitPoints() && this.getCurrentStaminaPoints()==this.getMaxStaminaPoints()){
+				this.isResting = false;
+				restTime = 0.0;
+			}
+			
+			else if (restTime >= 0.2){
+				restTime = restTime - 0.2;
+				if (this.getCurrentHitPoints() < this.getMaxHitPoints()){       //check grens (niet over maxHitpoints gaan!)
+					
+					double extraHitPoints = this.getToughness()/200.0;
+					this.hitpoints =  this.getCurrentHitPoints() +  extraHitPoints;         //sethitpoints aanmaken?                                     //TODO
+				}
+				else if (this.getCurrentStaminaPoints() < this.getMaxStaminaPoints()){
+					double extraStaminaPoints = this.getToughness()/100.0;
+					this.staminapoints = this.getCurrentStaminaPoints() + extraStaminaPoints; 
+				}
+				
+			}
+		}
 	    
 	    	
 		
@@ -300,28 +365,34 @@ public class Unit {
 	
 	//moving
 	
-	public boolean isSprinting(){
-		
+	public boolean isSprinting;
+	public boolean isMoving;
+	public boolean isWorking;
+	public boolean isFighting;
+	public boolean isResting;
+	public boolean inMinRestTime;	
 		
 		
 	}
 	public void startSprinting(){
-		if (isMoving and stamina >0)
-		isSprinting = True;
+		if (this.isMoving && this.getCurrentStaminaPoints() >0)
+		this.isSprinting = true;
 		
 	}
 	public void stopSprinting(){
-		
+		this.isSprinting = false;		
 	}
+
 	public double getCurrentSpeed(){
 		return this.currentSpeed;
 		
 	}
 	public void moveToAdjacent(int dx, int dy, int dz){
-		
 		//error if not in field
 		if (!(0<=this.getCubeCoordinates()[0]+dx<=49) || !(0<=this.getCubeCoordinates()[1]+dy<=49) || !(0<=this.getCubeCoordinates()[2]+dz<=49))
 			throw ModelException;
+		//moving activeren
+		this.isMoving = true;
 		
 		// variables (targetposition,)
 		this.targetposition = new double[] {this.getCubeCoordinates()[0]+dx
@@ -329,37 +400,45 @@ public class Unit {
 	    
 		
 	}
-	
 	public void moveTo(int[]cube){
-	
-		int x;
-		int y;
-		int z;
+		if (!this.isWorking){
 		
-		while (this.getCubeCoordinate()!= cube){
+	
+			int x;
+			int y;
+			int z;
+			this.isMoving = true;
+			this.endTargetPosition = new double []{cube[0]+lc/2.0 , cube[1]+lc/2.0, cube[2]+lc/2.0};
 			
-			if (this.getCubeCoordinate()[0]== cube[0])
-				x =0;
-			else if (this.getCubeCoordinate()[0]< cube[0])
-				x =1;
-			else 
-				x =-1;
-			if (this.getCubeCoordinate()[1]==cube[1])
-				y =0;
-			else if (this.getCubeCoordinate()[1]<cube[1])	
-				y = 1;
-			else 
-				y=-1;
-			if (this.getCubeCoordinate()[2]==cube[2])
-				z =0;
-			else if (this.getCubeCoordinate()[2]<cube[2])
-				z = 1;
-			else 
-				z = -1;
-			this.moveToAdjacent(x,y,z);
+			
+			while (this.getCubeCoordinates()!= cube); do{
+				
+				if (this.getCubeCoordinates()[0]== cube[0])
+					x =0;
+				else if (this.getCubeCoordinates()[0]< cube[0])
+					x =1;
+				else 
+					x =-1;
+				if (this.getCubeCoordinates()[1]==cube[1])
+					y =0;
+				else if (this.getCubeCoordinates()[1]<cube[1])	
+					y = 1;
+				else 
+					y=-1;
+				if (this.getCubeCoordinates()[2]==cube[2])
+					z =0;
+				else if (this.getCubeCoordinates()[2]<cube[2])
+					z = 1;
+				else 
+					z = -1;
+				moveToAdjacent(x,y,z);
+			}
 		}
 				
-	}
+	}	
+	
+	
+	
 	/* Attacking */
 	public void attack(Unit defender){
 		attackTime=1.00;
@@ -417,5 +496,20 @@ public class Unit {
 	public boolean isAttacking(){
 		return isAttacking;
 	}
+	public void work(){
+		//werken mogelijk?  (resting mag niet altijd onderbroken?!)
+		if ((!this.isMoving) && (!this.isFighting)){
+			this.isWorking = true;
+			this.workTime = 500/(double)this.getStrength();       //nakijken
+		}
+	}
+	public void rest(){
+		if(!this.isFighting){
+			this.isResting = true;
+			this.inMinRestTime =true;
+			minRestTime = 1/(this.getToughness()/200.0)*0.2;
+		}
+	}
+		
 
 }
