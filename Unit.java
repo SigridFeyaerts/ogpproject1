@@ -86,7 +86,7 @@ public class Unit {
 	 * Returns the initial position of the cube occupied by the unit.
 	 * @return ... of @Basic?
 	 */
-	public int [] getCubeCoordinates() {
+	public int [] getCubeCoordinate() {
 		int newcoordinates[]= {(int)(Math.floor(this.getPosition()[0])),(int)(Math.floor(this.getPosition()[1])),(int)(Math.floor(this.getPosition()[2]))};
 		return newcoordinates;
 		
@@ -336,23 +336,23 @@ public class Unit {
 		int y;
 		int z;
 		
-		while (this.getCubeCoordinates()!= cube); do{
+		while (this.getCubeCoordinate()!= cube); do{
 			
-			if (this.getCubeCoordinates()[0]== cube[0])
+			if (this.getCubeCoordinate()[0]== cube[0])
 				x =0;
-			else if (this.getCubeCoordinates()[0]< cube[0])
+			else if (this.getCubeCoordinate()[0]< cube[0])
 				x =1;
 			else 
 				x =-1;
-			if (this.getCubeCoordinates()[1]==cube[1])
+			if (this.getCubeCoordinate()[1]==cube[1])
 				y =0;
-			else if (this.getCubeCoordinates()[1]<cube[1])	
+			else if (this.getCubeCoordinate()[1]<cube[1])	
 				y = 1;
 			else 
 				y=-1;
-			if (this.getCubeCoordinates()[2]==cube[2])
+			if (this.getCubeCoordinate()[2]==cube[2])
 				z =0;
-			else if (this.getCubeCoordinates()[2]<cube[2])
+			else if (this.getCubeCoordinate()[2]<cube[2])
 				z = 1;
 			else 
 				z = -1;
