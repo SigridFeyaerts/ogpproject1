@@ -360,5 +360,62 @@ public class Unit {
 		}
 				
 	}
+	/* Attacking */
+	public void attack(Unit defender){
+		attackTime=1.00;
+		double thetaA=Math.atan2((defender.unitPosition[1]-this.unitPosition[1]),(defender.unitPosition[0]-this.unitPosition[0]));
+		double thetaD=Math.atan2((this.unitPosition[1]-defender.unitPosition[1]),(this.unitPosition[0]-defender.unitPosition[0]));		
+		this.setOrientation(thetaA);
+		defender.setOrientation(thetaD);
+		isAttacking = true;
+		//
+		if(defender.defended(this)){
+			return;
+		} else {
+			defender.takeDamage(this);
+		}
+		
+	}
+	/**
+	 * Make the unit defend itself from the given unit.
+	 * 
+	 * @param attacker
+	 */
+	private boolean defended(Unit attacker) {
+		// dodge
+		double probabilityDodge = 0.20 * (this.getAgility() / attacker.getAgility());
+		if (success(probabilityDodge)){
+			//random position in game world
+			return true;
+
+		}
+		// block
+		double probabilityBlock = 0.25 * ((this.getStrength() + this.getAgility()) / attacker.getStrength() + attacker.getAgility());
+		if (success(probabilityBlock))
+			return true;
+
+		return false;
+	}
+	
+	private boolean success(double probability){
+		// 
+		return probability>Math.random();
+		
+	}
+	private void takeDamage(Unit attacker){
+		double damage =attacker.getStrength()/10.0;
+		
+		this.setHitPoints((int)(hitpoints-damage));
+	}
+	
+	/**
+	 * Return whether this unit is currently attacking another unit.
+	 * 
+	 * @return true if the unit is currently attacking another unit; false
+	 *         otherwise.
+	 */
+	public boolean isAttacking(){
+		return isAttacking;
+	}
 
 }
