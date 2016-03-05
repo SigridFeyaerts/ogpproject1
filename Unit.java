@@ -55,19 +55,33 @@ public class Unit {
 	 * @post	If the given toughness is in the range of 25 to 100, inclusively, the toughness of this new
 	 * 		unit is the same as the given toughness.
 	 * @post	enableDefaultBehaviour TODO
-	 * @throws 	ModelException
+	 * @throws 	IllegalArgumentException
 	 *      	A precondition was violated or an exception was thrown.
 	 */
 	public Unit(String name, int[] initialPosition, int weight, int agility, int strength, int toughness,
-			boolean enableDefaultBehaviour) throws ModelException{
-		//TODO: implementeren zie initiele grenzen. initial value in the range of 25 to 100, inclusively, and the weight
-		// of a Unit must at all times be at least (s+a)/2
+			boolean enableDefaultBehaviour) throws IllegalArgumentException{
+		 
+		int minInitialValue = 25;
+		int maxInitialValue = 100;
 		setName(name);
 		setPosition(initialPosition);
-		setWeight(weight);
-		setAgility(agility);
+		
+		if (agility < minInitialValue)
+			agility = minInitialValue;
+		if (agility > maxInitialValue)
+			agility = maxInitialValue;
+		setAgility(agility);		
+		if (strength < minInitialValue)
+			strength = minInitialValue;
+		if (strength > maxInitialValue)
+			strength = maxInitialValue;
 		setStrength(strength);
+		if (toughness < minInitialValue)
+			toughness = minInitialValue;
+		if (toughness > maxInitialValue)
+			toughness = maxInitialValue;
 		setToughness(toughness);
+		setWeight(weight);
 		setEnableDefaultBehaviour(enableDefaultBehaviour);
 		
 		
@@ -168,10 +182,10 @@ public class Unit {
 	}
 	/**
 	 * Set the strength of the unit to the given strength.
-	 * @param 	newstrength //Waarom niet gewoon strength?
+	 * @param 	newstrength 
 	 * 		The new strength of the unit.
-	 * @post If the given strength is an integer number with a value less than 0, the new strength of this 
-	 * 	unit is given by 0.
+	 * @post If the given strength is an integer number with a value less than or equal to 0, the new strength of this 
+	 * 	unit is given by 1.
 	 *       | if(newstrength <=0) 
 	 *       |  then  new.getStrength ==1
 	 * @post If the given strength is an integer number with a value greater than 200, the new strength of this 
@@ -180,7 +194,7 @@ public class Unit {
 	 *       |  then new.getStrength ==200
 	 * @post If the given strength is an integer number with a value ranging from 1 to 200, inclusively, 
 	 * 	 the new strength of this unit is given by the given strength.
-	 *       | if(0<newstrength<200) // moet dat niet ook = aan 0 en 200
+	 *       | if(0<newstrength<200) 
 	 *       |  then new.getStrength == newstrength
 	 *     
 	 */
@@ -202,19 +216,30 @@ public class Unit {
 	}
 	/**
 	 * Set the weight of the unit to the given weight.
-	 * @param 	newweight
+	 * @param 	newWeight
 	 * 		The new weight of the unit.
-	 * @post	If the given weight is an integer numbers with a value ranging from 1 to 200, inclusively, and at 
-	 * 		least (strength+agility)/2, the new weight of this unit is given by the given weight.
+	 * @post	If the given weight is an integer numbers with a value ranging from (strength+agility)/2 to 200, inclusively,
+	 *           the new weight of this unit is given by the given weight.
+	 *           | if((newWeight>(this.getStrengt()+this.getAgility())/2.0)&& (newWeight <= 200))
+	 *           |    then new.getWeight() =  newWeight
+	 * @post	If the given weight is greater then 200 the weight of the unit will be set at 200.
+	 * 			| if(newWeight > 200)
+	 * 			|   then new.getWeight() = newWeight
+	 * @Post    If the given weight is smaller (strength+agility)/2, the weight of the unit will be set at
+	 * 			 (strength+agility)/2 rounded up to the next integer.
+	 * 			| if(newWeight < (this.getStrength() +this.getAgility())/2.0)
+	 *          |   then new.getWeigth() = (int)Math.ceil((this.getStrength() +this.getAgility())/2.0)
+	 * 
 	 * 
 	 */
-	public void setWeight(int newweight){
-		if (newweight <= 0)
-			this.weight = 1;
-		if (newweight >=200)
+	public void setWeight(int newWeight){
+		double minWeight = (this.getStrength()+ this.getAgility())/2.0;
+		if (newWeight <= minWeight)
+			this.weight = (int) Math.ceil(minWeight);
+		if (newWeight >=200)
 			this.weight = 200;
 		else
-			this.weight = newweight;
+			this.weight = newWeight;
 	}
 	/**
 	 * Returns the agility of the unit.
@@ -225,10 +250,10 @@ public class Unit {
 	}
 	/**
 	 * Set the agility of the unit to the given agility.
-	 * @param 	agility
+	 * @param 	newagility
 	 * 		The new agility of the unit.
-	 * @post If the given agility is an integer number with a value less than 0, the new agility of this 
-	 * 	 unit is given by 0.
+	 * @post If the given agility is an integer number with a value less than  or equal to 0, the new agility of this 
+	 * 	 unit is given by 1.
 	 *       | if(newagility <=0) 
 	 *       |  then  new.getAgility ==1
 	 * @post If the given agility is an integer number with a value greater than 200, the new agility of this 
@@ -237,8 +262,8 @@ public class Unit {
 	 *       |  then new.getAgility ==200
 	 * @post If the given agility is an integer number with a value ranging from 1 to 200, inclusively, 
 	 * 	 the new agility of this unit is given by the given agility.
-	 *       | if(0<newagility<200) // moet dat niet ook = aan 0 en 200
-	 *       |  then new.getAgility == newAgility
+	 *       | if(0<newagility<200) 
+	 *       |  then new.getAgility == newagility
 	 */
 	public void setAgility(int newagility){
 		if (newagility <=0)
@@ -257,11 +282,23 @@ public class Unit {
 	}
 	/**
 	 * Set the toughness of the unit to the given toughness.
-	 * @param 	toughness
+	 * @param 	newtoughness
 	 * 		The new toughness of the unit.
-	 * @post	If the given toughness is an integer numbers with a value ranging from 1 to 200, inclusively, 
-	 * 		the new toughness of this unit is given by the given toughness.
+	 * @post If the given toughness is an integer number with a value less than or equal to 0, the new toughness of this 
+	 * 		unit is given by 1.
+	 *       | if(newtoughness <=0) 
+	 *       |  then  new.getToughness ==1
+	 * @post If the given toughness is an integer number with a value greater than 200, the new toughness of this 
+	 * 	 unit is given by 200.
+	 *       | if(newtoughness >=200)
+	 *       |  then new.getToughness ==200
+	 * @post If the given toughness is an integer number with a value ranging from 1 to 200, inclusively, 
+	 * 	 the new toughness of this unit is given by the given toughness.
+	 *       | if(0<newtoughness<200) 
+	 *       |  then new.getToughness == newtoughness
+	 *     
 	 */
+	
 	public void setToughness(int newtoughness){
 		if (newtoughness <=0)
 			this.toughness = 1;
@@ -287,6 +324,7 @@ public class Unit {
 	 * @param 	enableDefaultBehaviour
 	 * 			The new default behaviour state for this unit.
 	 * @post	The new default behaviour state of this unit is equal to the given flag.
+	 *          | new.isEnableDefaultBehaviour = enableDefaultBehaviour
 	 */
 	public void setEnableDefaultBehaviour(boolean enableDefaultBehaviour) {
 		this.enableDefaultBehaviour = enableDefaultBehaviour;
@@ -295,33 +333,49 @@ public class Unit {
 	 * Start the default behaviour.
 	 * 
 	 * @effect The default behaviour state is set to true.
+	 *         | new.isEnableDefaultBehaviour = true
 	 */
 	public void startDefaultBehaviour(){
-		
+		this.enableDefaultBehaviour = true;
 	}
 	/**
 	 * Stop the default behaviour.
 	 * 
 	 * @effect The default behaviour state is set to false.
+	 *  		| new.isEnableDefaultBehaviour = false
 	 */
 	public void stopDefaultBehaviour(){
-	/**
-	 * Returns the maximum hit points of the unit.
-	 * TODO @return 200*(weight/100)*(toughness/100) ofzo 
-	 */	
+		this.enableDefaultBehaviour = false;
 	}
-	@Basic//Is dit wel zo?
+	/**
+	 * Returns the maximum hit points the unit could have.
+	 * @return 200*(weight/100)*(toughness/100) rounded up to the next integer.
+	 */	
+	
+	
 	public int getMaxHitPoints (){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
 	/**
 	 * Returns the amount of hitpoints of the unit.
-	 * TODO @return ...
+	 * 
 	 */
 	@Basic
 	public int getCurrentHitPoints(){
 		return this.hitPoints;
 	}
+	/**
+	 * Sets the hitpoints of the unit to the given amount, if the given amount is greater or equal to 0 and smaller then
+	 *  the Maximum hitpoints the unit could have.
+	 * @param newHitPoints
+	 * 		The given amount of hitpoints.
+	 * 
+	 * @post  the hitpoints of the unit are set at the given value.
+	 * 			| new.hitPoints = newHitPoints
+	 * @throws IllegalArgumentException
+	 * 			If the given hitpoints are greater then the maximum amount the unit can have or smaller then 0.
+	 *          
+	 */
 	public void setCurrentHitPoints(int newHitPoints)throws IllegalArgumentException{
 		if (newHitPoints<0 || newHitPoints > this.getMaxHitPoints()){
 			throw new IllegalArgumentException();
@@ -330,24 +384,30 @@ public class Unit {
 	}
 	/**
 	 * Returns the maximum stamina points of the unit.
-	 * TODO @return ...
+	 * @return 200*(weight/100)*(toughness/100) rounded up to the next integer.
 	 */
-	@Basic
+	
 	public int getMaxStaminaPoints(){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
 	/**
 	 * Returns the amount of stamina points of the unit.
-	 * TODO @return ...
+	 * 
 	 */
 	@Basic
 	public int getCurrentStaminaPoints(){
 		return this.staminaPoints;
 	}
 	/**
+	 * Sets the stamina points of the unit at the given amount.
 	 * 
 	 * @param newStaminaPoints
+	 * 		The given amount of stamina points.
+	 * @post the stamina points of the unit are equal to the given amount.
+	 *       | new.getStaminaPoints() =  newStaminaPoints
 	 * @throws IllegalArgumentException
+	 *		If the given amount of stamina points is greater then the maximum amount the unit is able to have or
+	 *		if the amount is smaller then 0.
 	 */
 	public void setCurrentStaminaPoints(int newStaminaPoints)throws IllegalArgumentException{
 		if (newStaminaPoints<0 || newStaminaPoints>this.getMaxStaminaPoints()){
@@ -362,21 +422,23 @@ public class Unit {
 	 * @param unit
 	 *        The unit for which to retrieve the orientation
 	 * @return The orientation of the unit, in radians.
-	 * @throws ModelException
-	 *          A precondition was violated or an exception was thrown.
+	 * 
 	 */
 	@Basic
 	public double getOrientation(){
 		return this.orientation; 
 	}
 	/**
-	 * 
+	 * Sets the orientation of the unit to the angel between 0 and 2*Pi that equals the given angle.
 	 * @param neworientation
+	 * 		The given angel for the unit.
 	 * 
-	 * @Post ...
-	 *       | if(neworientation >0)
+	 * @Post If the given orientation is greater then or equal to 0, the orientation of the unit is set at 
+	 * 		neworientation modulo 2 times Pi.
+	 *       | if(neworientation >=0)
 	 *       |    then new.getOrientation == neworientation % 2*PI
-	 * @post ...
+	 * @post If the given orientation is negative, the orientation of the unit will be equal to the neworientation modulo 2 times Pi,
+	 * 		increased with 2 times Pi.
 	 *       | if(neworientation<0)
 	 *       |    then new.getOrientation ==  (neworientation % 2*PI) +2*PI
 	 */
@@ -703,7 +765,7 @@ public class Unit {
 	private void takeDamage(Unit attacker){
 		double damage =attacker.getStrength()/10.0;
 		
-		this.setHitPoints(hitpoints-damage);
+		this.setCurrentHitPoints((int)Math.round(this.getCurrentHitPoints()-damage)); // is dit zo dan ok???(stond op een double)
 	}
 	
 	/**
@@ -720,13 +782,13 @@ public class Unit {
 	 * Make the given unit start working.
 	 * 
 	 * @param unit
-	 *            The unit that should start working
+	 *      The unit that should start working
 	 */
 	public void work(){
 		//werken mogelijk?  (resting mag niet altijd onderbroken?!)
 		if ((!this.isMoving) && (!this.isAttacking)){
 			this.isWorking = true;
-			this.workTime = 500/(double)this.getStrength();       //nakijken
+			this.workTime = 500/(double)this.getStrength();       
 		}
 	}
 	/**
@@ -764,5 +826,4 @@ public class Unit {
 	public boolean isResting(){
 		return isResting;
 	}
-
 }
