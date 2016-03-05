@@ -716,7 +716,7 @@ public class Unit {
 	 *            The unit that should start resting
 	 */
 	public void rest(){
-		if(!this.isFighting){
+		if(!this.isAttacking){
 			this.isResting = true;
 			this.inMinRestTime =true;
 			minRestTime = 1/(this.getToughness()/200.0)*0.2;
