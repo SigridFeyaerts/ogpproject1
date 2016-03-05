@@ -307,7 +307,6 @@ public class Unit {
 	 * TODO @return 200*(weight/100)*(toughness/100) ofzo 
 	 */	
 	}
-	@Basic//Is dit wel zo?
 	public int getMaxHitPoints (){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
@@ -323,7 +322,6 @@ public class Unit {
 	 * Returns the maximum stamina points of the unit.
 	 * TODO @return ...
 	 */
-	@Basic
 	public int getMaxStaminaPoints(){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
