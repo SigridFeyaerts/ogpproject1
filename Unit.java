@@ -469,7 +469,7 @@ public class Unit {
 
 		}
 		// block
-		double probabilityBlock = 0.25 * ((this.getStrength() + this.getAgility()) / attacker.getStrength() + attacker.getAgility());
+		double probabilityBlock = 0.25 * ((this.getStrength() + this.getAgility()) / (attacker.getStrength() + attacker.getAgility()));
 		if (success(probabilityBlock))
 			return true;
 
