@@ -22,8 +22,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public int[] getCubeCoordinate(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return unit.getCubeCoordinate();
 	}
 
 	@Override
@@ -34,7 +33,14 @@ public class Facade implements IFacade{
 
 	@Override
 	public void setName(Unit unit, String newName) throws ModelException {
-		unit.setName(newName);
+		
+		try { 
+			unit.setName(unit, newname);
+		}
+		catch(IllegalArgumentException){
+			throw ModelException("name is unvalid");
+			
+		}
 		
 	}
 
@@ -45,6 +51,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public void setWeight(Unit unit, int newValue) throws ModelException {
+		
 		unit.setWeight(newValue);
 		
 	}
@@ -88,8 +95,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public int getCurrentHitPoints(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return unit.getCurrentHitPoints();
 	}
 
 	@Override
@@ -99,99 +105,103 @@ public class Facade implements IFacade{
 
 	@Override
 	public int getCurrentStaminaPoints(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return unit.getCurrentStaminaPoints();
 	}
 
 	@Override
 	public void advanceTime(Unit unit, double dt) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			unit.advanceTime(dt);
+		}
+		catch (IllegalArgumentException){
+			throw ModelException("dt must be between 0 and 0.2");
+		}
+		
 		
 	}
 
 	@Override
 	public void moveToAdjacent(Unit unit, int dx, int dy, int dz) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			unit.moveToAdjacent(dx, dy, dz);
+			
+		}
+		catch(IllegalArgumentException){
+			throw ModelException("out of gameworld");
+		}
 	}
 
 	@Override
 	public double getCurrentSpeed(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return unit.getCurrentSpeed()
 	}
 
 	@Override
 	public boolean isMoving(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return unit.isMoving;
 	}
 
 	@Override
 	public void startSprinting(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
+		unit.startSprinting();
+
 		
 	}
 
 	@Override
 	public void stopSprinting(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
+		unit.stopSprinting();
 		
 	}
 
 	@Override
 	public boolean isSprinting(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return unit.isSprinting;
 	}
 
 	@Override
 	public double getOrientation(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return unit.getOrientation();
 	}
 
 	@Override
 	public void moveTo(Unit unit, int[] cube) throws ModelException {
-		// TODO Auto-generated method stub
+		unit.moveTo(cube);
 		
 	}
 
 	@Override
 	public void work(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
+		unit.work();
 		
 	}
 
 	@Override
 	public boolean isWorking(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return unit.isWorking;
 	}
 
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
-		// TODO Auto-generated method stub
+		
 		attacker.attack(defender);
 		
 	}
 
 	@Override
 	public boolean isAttacking(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return unit.isAttacking();
 	}
 
 	@Override
 	public void rest(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
+		unit.rest();
 		
 	}
 
 	@Override
 	public boolean isResting(Unit unit) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		return unit.isResting;
 	}
 
 	@Override
