@@ -2,6 +2,8 @@ package hillbillies.model;
 
 import be.kuleuven.cs.som.annotate.*;
 
+import java.util.Arrays.*;
+
 import ogp.framework.util.ModelException;
 
 /**
@@ -14,11 +16,12 @@ import ogp.framework.util.ModelException;
  
 public class Unit {
 	private String name;
-	private int strength,weight,agility,toughness,lc = 1;
-	private double attackTime,orientation,vw,vb,vs,currentSpeed,distanceToGo,hitpoints,staminaPoints,workTime,restTime,minRestTime;
+	private int strength,weight,agility,toughness,lc = 1,hitPoints,staminaPoints;
+	private double attackTime,orientation,vw,vb,vs,currentSpeed,distanceToGo,workTime,restTime,minRestTime,sprintedTime;
 	private double[] position,targetPosition,v,endTargetPosition;
 	private boolean enableDefaultBehaviour, isAttacking=false,isMoving=false,isSprinting=false,isWorking=false,isResting=true,inMinRestTime;;
-
+    
+    
 	private static final char [] validChars = new char[]{' ','\"','\''};
 	
 	/**
@@ -60,7 +63,7 @@ public class Unit {
 		//TODO: implementeren zie initiele grenzen. initial value in the range of 25 to 100, inclusively, and the weight
 		// of a Unit must at all times be at least (s+a)/2
 		setName(name);
-		setCubeCoordinates(initialPosition);
+		setPosition(initialPosition);
 		setWeight(weight);
 		setAgility(agility);
 		setStrength(strength);
@@ -118,9 +121,9 @@ public class Unit {
 	 * 		The given name is not valid for any unit.
 	 * 		| ! isValidName(name)
 	 */
-	public void setName(Unit unit, String newname){
+	public void setName(String newname)throws IllegalArgumentException{
 		if (!isValidName(name))
-			throw new ModelException(name);
+			throw new IllegalArgumentException(name);
 		this.name = name;
 		
 	}
@@ -141,19 +144,19 @@ public class Unit {
 		
 	}
 	/**
-	 * Set the initial position of the cube occupied by the unit to the given initial position.
+	 * set the position of the unit to the center of the given cube.
+	 * @param initialPosition
 	 * 
-	 * @param 	initialPositionCube
-	 * 			The given initial position of the cube occupied by the unit. This is given by rounding down the 
-	 * 			coordinates of the unit's position to integer numbers.
-	 * @post	If ... limitations. (defensively)//TODO
+	 * @post the position of the unit is the center of the cube with coordinate intitialPosition.
+	 *       | for (int i=0;i<3;i++)
+	 *       |     new.position[i] = initialPositon[i]+lc/2.0
 	 */
-	 private void setCubeCoordinate(double[] initialPosition) {
-		 int dim = 3;
-		 int[] cubeCoordinate= new int[dim];
-		 for(int i=0; i<dim; i++){
-			 cubeCoordinate[i]=(int)Math.floor(initialPosition[i]);
-		 }
+	private void setPosition(int[]initialPosition){
+		int dim = 3;
+		for(int i=0; i<dim; i++){
+			 this.position[i]= initialPosition[i]+ lc/2.0;
+		}
+				
 	}
 	/**
 	 * Returns the strength of the unit.
@@ -307,6 +310,7 @@ public class Unit {
 	 * TODO @return 200*(weight/100)*(toughness/100) ofzo 
 	 */	
 	}
+	@Basic//Is dit wel zo?
 	public int getMaxHitPoints (){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
@@ -315,13 +319,20 @@ public class Unit {
 	 * TODO @return ...
 	 */
 	@Basic
-	public double getCurrentHitPoints(){
-		return this.hitpoints;
+	public int getCurrentHitPoints(){
+		return this.hitPoints;
+	}
+	public void setCurrentHitPoints(int newHitPoints)throws IllegalArgumentException{
+		if (newHitPoints<0 || newHitPoints > this.getMaxHitPoints()){
+			throw new IllegalArgumentException();
+		}
+		this.hitPoints = newHitPoints;
 	}
 	/**
 	 * Returns the maximum stamina points of the unit.
 	 * TODO @return ...
 	 */
+	@Basic
 	public int getMaxStaminaPoints(){
 		return (int)(Math.ceil(200*(this.getWeight()/100.0)*(this.getToughness()/100.0)));
 	}
@@ -330,8 +341,19 @@ public class Unit {
 	 * TODO @return ...
 	 */
 	@Basic
-	public double getCurrentStaminaPoints(){
+	public int getCurrentStaminaPoints(){
 		return this.staminaPoints;
+	}
+	/**
+	 * 
+	 * @param newStaminaPoints
+	 * @throws IllegalArgumentException
+	 */
+	public void setCurrentStaminaPoints(int newStaminaPoints)throws IllegalArgumentException{
+		if (newStaminaPoints<0 || newStaminaPoints>this.getMaxStaminaPoints()){
+			throw new IllegalArgumentException();
+		}
+		this.staminaPoints = newStaminaPoints;
 	}
 	/* Orientation */
 	/**
@@ -379,10 +401,10 @@ public class Unit {
 	 * @throws 	ModelException
 	 *          A precondition was violated or an exception was thrown.
 	 */
-	public void advanceTime(double dt) throws ModelException{
+	public void advanceTime(double dt) throws IllegalArgumentException{
 		//correcte dt?
 		if (!(0<dt&& dt<0.2))
-		   throw new ModelException();
+		   throw new IllegalArgumentException();
 		
 		//snelheid bepalen 
 		if (!(isMoving))
@@ -396,9 +418,9 @@ public class Unit {
 			vw = 1.2*vb;
 		else 
 			vw = vb;
-		vs=2*vw;
+		
 		if (this.isSprinting)
-			currentSpeed = vs ;
+			currentSpeed = 2*vw ;
 		else
 			currentSpeed = vw;
 		
@@ -411,8 +433,8 @@ public class Unit {
 			v = new double[]{this.getCurrentSpeed()*(targetPosition[0]-this.getPosition()[0])/distanceToGo,
 					this.getCurrentSpeed()*(targetPosition[1]-this.getPosition()[1])/distanceToGo,
 					this.getCurrentSpeed()*(targetPosition[2]-this.getPosition()[2])/distanceToGo};
-			double speed = Math.sqrt(Math.pow(v[0],2)+ Math.pow(v[1],2)+Math.pow(v[2], 2));
-			if (distanceToGo > speed*dt){		
+
+			if (distanceToGo > this.getCurrentSpeed()*dt){		
 				this.position = new double[]{this.getPosition()[0] + v[0] * dt, this.getPosition()[1]+ v[1]*dt, this.getPosition()[2]+ v[2]*dt};
 				this.setOrientation(Math.atan2(v[0],v[1]));
 		    }
@@ -426,7 +448,18 @@ public class Unit {
 		    }
 		}
 		//Stamina points
-		if (isSprinting)
+		if (isSprinting){
+			sprintedTime += dt;
+			while(sprintedTime >= 0.1){
+				sprintedTime -= 0.1;
+				if (this.getCurrentStaminaPoints()<=1){
+					this.setCurrentStaminaPoints(0);
+					this.isSprinting = false;
+				}
+				else
+					this.setCurrentStaminaPoints(this.getCurrentStaminaPoints()-1);				
+			}
+		}
 		//working
 		if (this.isWorking){
 			if ((this.workTime - dt)>0){
@@ -438,14 +471,14 @@ public class Unit {
 			}
 		}
 		//resting in 3 min 
-		double timeTillRest=3*60;
+		double timeTillRest=0;
 		if (!this.isResting){
-			if (timeTillRest <=0){
+			if (timeTillRest + dt >= 3*60){
 				this.isResting = true;
-				timeTillRest = 3*60;
+				timeTillRest = 0;
 			}
 			else 
-				timeTillRest -= dt;
+				timeTillRest += dt;
 				
 		}
 		//in rust (hitpoints, staminapoints of beeindigen, in minimum rusttijd?) 
@@ -468,20 +501,23 @@ public class Unit {
 				this.isResting = false;
 				restTime = 0.0;
 			}
+			else if (this.getCurrentHitPoints()<this.getMaxHitPoints()){
+				double timeToRecoverHitPoint = (1/(this.getToughness()/200.0)*0.2);
 			
-			else if (restTime >= 0.2){
-				restTime = restTime - 0.2;
-				if (this.getCurrentHitPoints() < this.getMaxHitPoints()){       //check grens (niet over maxHitpoints gaan!)
-					
-					double extraHitPoints = this.getToughness()/200.0;
-					this.hitpoints =  this.getCurrentHitPoints() +  extraHitPoints;         //sethitpoints aanmaken?                                     //TODO
-				}
-				else if (this.getCurrentStaminaPoints() < this.getMaxStaminaPoints()){
-					double extraStaminaPoints = this.getToughness()/100.0;
-					this.staminaPoints = this.getCurrentStaminaPoints() + extraStaminaPoints; 
+				if (restTime > timeToRecoverHitPoint ){
+					this.setCurrentHitPoints(this.getCurrentHitPoints()+1);
+					restTime -= timeToRecoverHitPoint;
 				}
 				
 			}
+			else if (this.getCurrentStaminaPoints()<this.getMaxStaminaPoints()){
+				double timeToRecoverStaminaPoint = (1/(this.getToughness()/100.0)*0.2);
+				if (restTime > timeToRecoverStaminaPoint){
+					this.setCurrentStaminaPoints(this.getCurrentStaminaPoints()+1);
+					restTime -= timeToRecoverStaminaPoint;
+				}
+			}
+			
 		}
 		//fighting
 		if (isAttacking) {
@@ -541,16 +577,16 @@ public class Unit {
 	*            The amount of cubes to move in the z-direction; should be -1,
 	*            0 or 1.
 	*/	
-	public void moveToAdjacent(int dx, int dy, int dz){
+	public void moveToAdjacent(int dx, int dy, int dz)throws IllegalArgumentException{
 		//error if not in field
 		if (!(0<=this.getCubeCoordinate()[0]+dx && this.getCubeCoordinate()[0]+dx<=49) || !(0<=this.getCubeCoordinate()[1]+dy && this.getCubeCoordinate()[1]+dy<=49) || !(0<=this.getCubeCoordinate()[2]+dz && this.getCubeCoordinate()[2]+dz<=49))
-			throw new ModelException();
+			throw new IllegalArgumentException();
 		//moving activeren
 		this.isMoving = true;
 		
 		// variables (targetposition,)
-		this.targetPosition = new double[] {this.getCubeCoordinates()[0]+dx
-				             + lc/2.0, this.getCubeCoordinates()[1]+dy + lc/2.0,this.getCubeCoordinates()[2]+dz + lc/2.0};
+		this.targetPosition = new double[] {this.getCubeCoordinate()[0]+dx
+				             + lc/2.0, this.getCubeCoordinate()[1]+dy + lc/2.0,this.getCubeCoordinate()[2]+dz + lc/2.0};
 	    
 		
 	}
@@ -574,23 +610,23 @@ public class Unit {
 			this.endTargetPosition = new double []{cube[0]+lc/2.0 , cube[1]+lc/2.0, cube[2]+lc/2.0};
 			
 			
-			while (this.getCubeCoordinates()!= cube); do{
+			while (this.getCubeCoordinate()!= cube){
 				
-				if (this.getCubeCoordinates()[0]== cube[0])
+				if (this.getCubeCoordinate()[0]== cube[0])
 					x =0;
-				else if (this.getCubeCoordinates()[0]< cube[0])
+				else if (this.getCubeCoordinate()[0]< cube[0])
 					x =1;
 				else 
 					x =-1;
-				if (this.getCubeCoordinates()[1]==cube[1])
+				if (this.getCubeCoordinate()[1]==cube[1])
 					y =0;
-				else if (this.getCubeCoordinates()[1]<cube[1])	
+				else if (this.getCubeCoordinate()[1]<cube[1])	
 					y = 1;
 				else 
 					y=-1;
-				if (this.getCubeCoordinates()[2]==cube[2])
+				if (this.getCubeCoordinate()[2]==cube[2])
 					z =0;
-				else if (this.getCubeCoordinates()[2]<cube[2])
+				else if (this.getCubeCoordinate()[2]<cube[2])
 					z = 1;
 				else 
 					z = -1;
@@ -618,15 +654,15 @@ public class Unit {
 	 * @throws ModelException
 	 *             A precondition was violated or an exception was thrown.
 	 */
-	public boolean isSprinting() throws ModelException{
+	public boolean isSprinting(){
 		return isSprinting;
 	}
 	
 	/* Attacking */
 	public void attack(Unit defender){
 		attackTime=1.00;
-		double thetaA=Math.atan2((defender.unitPosition[1]-this.unitPosition[1]),(defender.unitPosition[0]-this.unitPosition[0]));
-		double thetaD=Math.atan2((this.unitPosition[1]-defender.unitPosition[1]),(this.unitPosition[0]-defender.unitPosition[0]));		
+		double thetaA=Math.atan2((defender.position[1]-this.position[1]),(defender.position[0]-this.position[0]));
+		double thetaD=Math.atan2((this.position[1]-defender.position[1]),(this.position[0]-defender.position[0]));		
 		this.setOrientation(thetaA);
 		defender.setOrientation(thetaD);
 		isAttacking = true;
