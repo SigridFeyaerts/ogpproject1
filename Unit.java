@@ -398,9 +398,9 @@ public class Unit {
 			vw = 1.2*vb;
 		else 
 			vw = vb;
-		
+		vs=2*vw;
 		if (this.isSprinting)
-			currentSpeed = 2*vw ;
+			currentSpeed = vs ;
 		else
 			currentSpeed = vw;
 		
