@@ -429,9 +429,9 @@ public class Unit {
 		    	this.endTargetPosition = null;
 		    }
 		}
-	    //Stamina points
+		//Stamina points
 		if (isSprinting)
-	    //working
+		//working
 		if (this.isWorking){
 			if ((this.workTime - dt)>0){
 				this.workTime = this.workTime - dt;
@@ -442,14 +442,14 @@ public class Unit {
 			}
 		}
 		//resting in 3 min 
-		double timeTillRest;
+		double timeTillRest=0;
 		if (!this.isResting){
-			if (timeTillRest + dt >= 3){
+			if (timeTillRest + dt >= 3*60){
 				this.isResting = true;
 				timeTillRest = 0;
 			}
 			else 
-				timeTillRest = timeTillRest + dt;
+				timeTillRest += dt;
 				
 		}
 		//in rust (hitpoints, staminapoints of beeindigen, in minimum rusttijd?) 
@@ -461,12 +461,12 @@ public class Unit {
 				}
 				
 				else 
-					minRestTime = minRestTime - dt;
+					minRestTime -= dt;
 					
 				
 			}
 			
-			restTime = restTime + dt;
+			restTime += dt;
 			
 			if (this.getCurrentHitPoints()==this.getMaxHitPoints() && this.getCurrentStaminaPoints()==this.getMaxStaminaPoints()){
 				this.isResting = false;
@@ -482,13 +482,18 @@ public class Unit {
 				}
 				else if (this.getCurrentStaminaPoints() < this.getMaxStaminaPoints()){
 					double extraStaminaPoints = this.getToughness()/100.0;
-					this.staminapoints = this.getCurrentStaminaPoints() + extraStaminaPoints; 
+					this.staminaPoints = this.getCurrentStaminaPoints() + extraStaminaPoints; 
 				}
 				
 			}
 		}
-	    
-	    	
+		//fighting
+		if (isAttacking) {
+			attackTime -= dt;
+			if (attackTime <= 0)
+				isAttacking = false;
+			}
+	    	//default behaviour
 		
 	}
 	
