@@ -440,14 +440,14 @@ public class Unit {
 			}
 		}
 		//resting in 3 min 
-		double timeTillRest=0;
+		double timeTillRest=3*60;
 		if (!this.isResting){
-			if (timeTillRest + dt >= 3*60){
+			if (timeTillRest <=0){
 				this.isResting = true;
-				timeTillRest = 0;
+				timeTillRest = 3*60;
 			}
 			else 
-				timeTillRest += dt;
+				timeTillRest -= dt;
 				
 		}
 		//in rust (hitpoints, staminapoints of beeindigen, in minimum rusttijd?) 
