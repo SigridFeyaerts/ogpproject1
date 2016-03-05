@@ -603,8 +603,28 @@ public class Unit {
 		}
 				
 	}	
-	
-	
+	/**
+	 * Return whether the given unit is currently moving.
+	 * 
+	 * @param unit
+	 *            The unit for which to retrieve the state.
+	 * @return true if the unit is currently moving; false otherwise
+	 */
+	public boolean isMoving(){
+		return isMoving;
+	}
+	/**
+	 * Return whether the given unit is currently sprinting.
+	 * 
+	 * @param unit
+	 *            The unit for which to retrieve the state.
+	 * @return true if the unit is currently sprinting; false otherwise
+	 * @throws ModelException
+	 *             A precondition was violated or an exception was thrown.
+	 */
+	public boolean isSprinting() throws ModelException{
+		return isSprinting;
+	}
 	
 	/* Attacking */
 	public void attack(Unit defender){
@@ -663,13 +683,38 @@ public class Unit {
 	public boolean isAttacking(){
 		return isAttacking;
 	}
+	/* Working */
+	/**
+	 * Make the given unit start working.
+	 * 
+	 * @param unit
+	 *            The unit that should start working
+	 */
 	public void work(){
 		//werken mogelijk?  (resting mag niet altijd onderbroken?!)
-		if ((!this.isMoving) && (!this.isFighting)){
+		if ((!this.isMoving) && (!this.isAttacking)){
 			this.isWorking = true;
 			this.workTime = 500/(double)this.getStrength();       //nakijken
 		}
 	}
+	/**
+	 * Return whether the given unit is currently working.
+	 * 
+	 * @param unit
+	 *            The unit for which to retrieve the state
+	 * @return true if the unit is currently working; false otherwise
+	 */
+	public boolean isWorking(){
+		return isWorking;
+	}
+	/* Resting */
+
+	/**
+	 * Make the given unit rest.
+	 * 
+	 * @param unit
+	 *            The unit that should start resting
+	 */
 	public void rest(){
 		if(!this.isFighting){
 			this.isResting = true;
@@ -677,6 +722,15 @@ public class Unit {
 			minRestTime = 1/(this.getToughness()/200.0)*0.2;
 		}
 	}
-		
+	/**
+	 * Return whether the given unit is currently resting.
+	 * 
+	 * @param unit
+	 *            The unit for which to retrieve the atate
+	 * @return true if the unit is currently resting; false otherwise
+	 */
+	public boolean isResting(){
+		return isResting;
+	}
 
 }
