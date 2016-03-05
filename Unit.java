@@ -498,37 +498,75 @@ public class Unit {
 	}
 	
 	
-	//moving
-	
-		
-		
-	}
+	/* moving*/
+	/**
+	 * Enable sprinting mode for the given unit.
+	 * 
+	 * @param unit
+	 *        The unit which should start sprinting.
+	 */
 	public void startSprinting(){
 		if (this.isMoving && this.getCurrentStaminaPoints() >0)
 		this.isSprinting = true;
 		
 	}
+	/**
+	 * Disable sprinting mode for the given unit.
+	 * 
+	 * @param unit
+	 *            The unit which should stop sprinting.
+	 */
 	public void stopSprinting(){
 		this.isSprinting = false;		
 	}
-
+	/**
+	 * Return the current speed of the given unit.
+	 * 
+	 * @param unit
+	 *            The unit for which to retrieve the speed.
+	 * @return The speed of the given unit.
+	 */
 	public double getCurrentSpeed(){
 		return this.currentSpeed;
 		
 	}
+	/**
+	* Move the given unit to an adjacent cube.
+	*
+	* @param unit
+	*            The unit to move
+	* @param dx
+	*            The amount of cubes to move in the x-direction; should be -1,
+	*            0 or 1.
+	* @param dy
+	*            The amount of cubes to move in the y-direction; should be -1,
+	*            0 or 1.
+	* @param dz
+	*            The amount of cubes to move in the z-direction; should be -1,
+	*            0 or 1.
+	*/	
 	public void moveToAdjacent(int dx, int dy, int dz){
 		//error if not in field
-		if (!(0<=this.getCubeCoordinates()[0]+dx<=49) || !(0<=this.getCubeCoordinates()[1]+dy<=49) || !(0<=this.getCubeCoordinates()[2]+dz<=49))
-			throw ModelException;
+		if (!(0<=this.getCubeCoordinate()[0]+dx && this.getCubeCoordinate()[0]+dx<=49) || !(0<=this.getCubeCoordinate()[1]+dy && this.getCubeCoordinate()[1]+dy<=49) || !(0<=this.getCubeCoordinate()[2]+dz && this.getCubeCoordinate()[2]+dz<=49))
+			throw new ModelException();
 		//moving activeren
 		this.isMoving = true;
 		
 		// variables (targetposition,)
-		this.targetposition = new double[] {this.getCubeCoordinates()[0]+dx
+		this.targetPosition = new double[] {this.getCubeCoordinates()[0]+dx
 				             + lc/2.0, this.getCubeCoordinates()[1]+dy + lc/2.0,this.getCubeCoordinates()[2]+dz + lc/2.0};
 	    
 		
 	}
+	/**
+	 * Start moving the given unit to the given cube.
+	 * 
+	 * @param unit
+	 *            The unit that should start moving
+	 * @param cube
+	 *            The coordinate of the cube to move to, as an array of integers
+	 *            {x, y, z}.
+	 */
 	public void moveTo(int[]cube){
 		if (!this.isWorking){
 		
