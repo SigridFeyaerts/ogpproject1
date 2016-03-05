@@ -484,7 +484,7 @@ public class Unit {
 	private void takeDamage(Unit attacker){
 		double damage =attacker.getStrength()/10.0;
 		
-		this.setHitPoints((int)(hitpoints-damage));
+		this.setHitPoints(hitpoints-damage);
 	}
 	
 	/**
