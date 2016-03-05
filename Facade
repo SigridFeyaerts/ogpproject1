@@ -35,10 +35,10 @@ public class Facade implements IFacade{
 	public void setName(Unit unit, String newName) throws ModelException {
 		
 		try { 
-			unit.setName(unit, newname);
+			unit.setName(newName);
 		}
-		catch(IllegalArgumentException){
-			throw ModelException("name is unvalid");
+		catch(IllegalArgumentException exc){
+			throw new ModelException("Name is invalid.");
 			
 		}
 		
@@ -51,9 +51,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public void setWeight(Unit unit, int newValue) throws ModelException {
-		
 		unit.setWeight(newValue);
-		
 	}
 
 	@Override
@@ -113,8 +111,8 @@ public class Facade implements IFacade{
 		try {
 			unit.advanceTime(dt);
 		}
-		catch (IllegalArgumentException){
-			throw ModelException("dt must be between 0 and 0.2");
+		catch (IllegalArgumentException exc){
+			throw new ModelException("dt must be between 0 and 0.2");
 		}
 		
 		
@@ -126,19 +124,19 @@ public class Facade implements IFacade{
 			unit.moveToAdjacent(dx, dy, dz);
 			
 		}
-		catch(IllegalArgumentException){
-			throw ModelException("out of gameworld");
+		catch(IllegalArgumentException exc){
+			throw new ModelException("out of gameworld");
 		}
 	}
 
 	@Override
 	public double getCurrentSpeed(Unit unit) throws ModelException {
-		return unit.getCurrentSpeed()
+		return unit.getCurrentSpeed();
 	}
 
 	@Override
 	public boolean isMoving(Unit unit) throws ModelException {
-		return unit.isMoving;
+		return unit.isMoving();
 	}
 
 	@Override
@@ -156,7 +154,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public boolean isSprinting(Unit unit) throws ModelException {
-		return unit.isSprinting;
+		return unit.isSprinting();
 	}
 
 	@Override
@@ -178,7 +176,7 @@ public class Facade implements IFacade{
 
 	@Override
 	public boolean isWorking(Unit unit) throws ModelException {
-		return unit.isWorking;
+		return unit.isWorking();
 	}
 
 	@Override
