@@ -415,8 +415,8 @@ public class Unit {
 			v = new double[]{this.getCurrentSpeed()*(targetPosition[0]-this.getPosition()[0])/distanceToGo,
 					this.getCurrentSpeed()*(targetPosition[1]-this.getPosition()[1])/distanceToGo,
 					this.getCurrentSpeed()*(targetPosition[2]-this.getPosition()[2])/distanceToGo};
-
-			if (distanceToGo > this.getCurrentSpeed()*dt){		
+			double speed = Math.sqrt(Math.pow(v[0],2)+ Math.pow(v[1],2)+Math.pow(v[2], 2));
+			if (distanceToGo > speed*dt){		
 				this.position = new double[]{this.getPosition()[0] + v[0] * dt, this.getPosition()[1]+ v[1]*dt, this.getPosition()[2]+ v[2]*dt};
 				this.setOrientation(Math.atan2(v[0],v[1]));
 		    }
