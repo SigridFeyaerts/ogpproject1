@@ -158,6 +158,17 @@ public class Unit {
 		
 	}
 	/**
+	  * Gives the coordinate of the cube where the given position is a part of.
+	  * @param position
+	  * 	The given position
+	  * @return An array with all values of position rounded up to the next integer.
+	  *         
+	  */
+	public int[] getCubeCoordinate(double[]position){
+		int [] cubeCoordinate = {(int)Math.floor(position[0]), (int)Math.floor(position[1]),(int)Math.floor(position[2])};
+		return cubeCoordinate;	
+	}
+	/**
 	 * set the position of the unit to the center of the given cube.
 	 * @param initialPosition
 	 * 
@@ -499,15 +510,44 @@ public class Unit {
 			if (distanceToGo > this.getCurrentSpeed()*dt){		
 				this.position = new double[]{this.getPosition()[0] + v[0] * dt, this.getPosition()[1]+ v[1]*dt, this.getPosition()[2]+ v[2]*dt};
 				this.setOrientation(Math.atan2(v[0],v[1]));
-		    }
-		    else 
-		    	this.position = this.targetPosition;
-		        if (this.endTargetPosition == null)
-		        	this.isMoving = false;
-		    if (this.position == this.endTargetPosition){
-		    	this.isMoving = false;
-		    	this.endTargetPosition = null;
-		    }
+		        }
+		    	else {
+			    	this.position = this.targetPosition;
+			        if (this.endTargetPosition == null)
+			        	this.isMoving = false;
+			        else if (this.position == this.endTargetPosition){
+				    	this.isMoving = false;
+				    	this.endTargetPosition = null;
+				    }
+			        else{
+			        	int x;
+					int y;
+					int z;
+					int[] endTargetCube = this.getCubeCoordinate(this.endTargetPosition);
+					if (this.getCubeCoordinate()[0]== endTargetCube[0])
+						x =0;
+					else if (this.getCubeCoordinate()[0]< endTargetCube[0])
+						x =1;
+					else 
+						x =-1;
+					if (this.getCubeCoordinate()[1]== endTargetCube[1])
+						y =0;
+					else if (this.getCubeCoordinate()[1]<endTargetCube[1])	
+						y = 1;
+					else 
+						y=-1;
+					if (this.getCubeCoordinate()[2]==endTargetCube[2])
+						z =0;
+					else if (this.getCubeCoordinate()[2]< endTargetCube[2])
+						z = 1;
+					else 
+						z = -1;
+					this.moveToAdjacent(x,y,z);
+											
+			        	
+			        }
+		    	}
+		   
 		}
 		//Stamina points
 		if (isSprinting){
@@ -662,38 +702,12 @@ public class Unit {
 	 *            {x, y, z}.
 	 */
 	public void moveTo(int[]cube){
-		if (!this.isWorking){
+		if ((!this.isWorking)&&(!this.isAttacking)){
 		
-	
-			int x;
-			int y;
-			int z;
 			this.isMoving = true;
 			this.endTargetPosition = new double []{cube[0]+lc/2.0 , cube[1]+lc/2.0, cube[2]+lc/2.0};
 			
 			
-			while (this.getCubeCoordinate()!= cube){
-				
-				if (this.getCubeCoordinate()[0]== cube[0])
-					x =0;
-				else if (this.getCubeCoordinate()[0]< cube[0])
-					x =1;
-				else 
-					x =-1;
-				if (this.getCubeCoordinate()[1]==cube[1])
-					y =0;
-				else if (this.getCubeCoordinate()[1]<cube[1])	
-					y = 1;
-				else 
-					y=-1;
-				if (this.getCubeCoordinate()[2]==cube[2])
-					z =0;
-				else if (this.getCubeCoordinate()[2]<cube[2])
-					z = 1;
-				else 
-					z = -1;
-				moveToAdjacent(x,y,z);
-			}
 		}
 				
 	}	
