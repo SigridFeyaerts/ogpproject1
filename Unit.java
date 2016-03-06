@@ -157,7 +157,8 @@ public class Unit {
 	/**
 	 * Returns the initial position of the cube occupied by the unit.
 	 * @return Returns a array which contains the position of the unit rounded down to an integer.
-	 *         
+	 *         | int [] =  {(int)(Math.floor(this.getPosition()[0])),(int)(Math.floor(this.getPosition()[1])),(int)(Math.floor(this.getPosition()[2]))}
+
 	 */
 	 
 	public int [] getCubeCoordinate() {
@@ -170,6 +171,7 @@ public class Unit {
 	  * @param position
 	  * 	The given position
 	  * @return An array with all values of position rounded down to an integer.
+	  *         | int [] ={(int)Math.floor(position[0]), (int)Math.floor(position[1]),(int)Math.floor(position[2])}
 	  *         
 	  */
 	public int[] getCubeCoordinate(double[]position){
@@ -403,7 +405,9 @@ public class Unit {
 	}
 	/**
 	 * Returns the maximum stamina points of the unit.
-	 * @return 200*(weight/100)*(toughness/100) rounded up to the next integer.
+	 * @return 200 times the weight of the unit divided by 100, times the toughness of the unit divided by 100,
+	 * 		rounded up to the next integer.
+	 * 		| (int)Math.ceil(200*(weight/100)*(toughness/100))
 	 */
 	
 	public int getMaxStaminaPoints(){
