@@ -6,6 +6,19 @@ import be.kuleuven.cs.som.annotate.*
  * A class of units characterised by their name, position,
  * weight, agility, strength, toughness and default behaviour. TODO...(limits,...)
  * 
+ * @invar  The Name of all units must be a valid name.
+ * 	   | isValidName(getName())
+ * @invar  The position of all units must be inside the game world.
+ * 	   | getPosition()[0]<=50 && getPostion()[0]>=0 && getPosition()[1]<=50 &&  getPosition()[1]>=0 && getPosition()[2]<=50 &&  getPosition()[2]>=0
+ * @invar  The weight of all units must be greater then or equal to  half  strength of the unit increased with half it's agility and smaller then or equal to 200.
+ * 	   | getWeight()>=( getStrength()+getAgility())/2 && getWeight<=200
+ * @invar  The toughness of all units must be smaller then or equal 200 and greater then or equal to 1.
+ * 	   | getToughness()<=200 && getToughness()>=1
+ * @invar  The agility of all units must be smaller then or equal 200 and greater then or equal to 1.
+ * 	   | getAgility()<=200 && getAgility()>=1
+ * @invar  The strength of all units must be smaller then or equal 200 and greater then or equal to 1.
+ * 	   | getStrength()<=200 && getStrength()>=1
+ * 
  * @version 1.0
  * @author Sigrid Feyaerts, Eleanor Van Looy
  */
