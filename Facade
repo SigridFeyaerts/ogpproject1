@@ -33,13 +33,11 @@ public class Facade implements IFacade{
 
 	@Override
 	public void setName(Unit unit, String newName) throws ModelException {
-		
-		try { 
+		try {
 			unit.setName(newName);
 		}
 		catch(IllegalArgumentException exc){
-			throw new ModelException("Name is invalid.");
-			
+			throw new ModelException("Name is invalid");
 		}
 		
 	}
@@ -112,21 +110,16 @@ public class Facade implements IFacade{
 			unit.advanceTime(dt);
 		}
 		catch (IllegalArgumentException exc){
-			throw new ModelException("dt must be between 0 and 0.2");
+			throw new ModelException("dt must be between 0 and 0.2, the given dt was "+dt);
 		}
-		
 		
 	}
 
 	@Override
 	public void moveToAdjacent(Unit unit, int dx, int dy, int dz) throws ModelException {
-		try {
+		
 			unit.moveToAdjacent(dx, dy, dz);
 			
-		}
-		catch(IllegalArgumentException exc){
-			throw new ModelException("out of gameworld");
-		}
 	}
 
 	@Override
@@ -142,14 +135,12 @@ public class Facade implements IFacade{
 	@Override
 	public void startSprinting(Unit unit) throws ModelException {
 		unit.startSprinting();
-
 		
 	}
 
 	@Override
 	public void stopSprinting(Unit unit) throws ModelException {
 		unit.stopSprinting();
-		
 	}
 
 	@Override
@@ -165,13 +156,11 @@ public class Facade implements IFacade{
 	@Override
 	public void moveTo(Unit unit, int[] cube) throws ModelException {
 		unit.moveTo(cube);
-		
 	}
 
 	@Override
 	public void work(Unit unit) throws ModelException {
-		unit.work();
-		
+		unit.work();		
 	}
 
 	@Override
@@ -181,7 +170,6 @@ public class Facade implements IFacade{
 
 	@Override
 	public void fight(Unit attacker, Unit defender) throws ModelException {
-		
 		attacker.attack(defender);
 		
 	}
@@ -199,18 +187,18 @@ public class Facade implements IFacade{
 
 	@Override
 	public boolean isResting(Unit unit) throws ModelException {
-		return unit.isResting;
+		return unit.isResting();
 	}
 
 	@Override
 	public void setDefaultBehaviorEnabled(Unit unit, boolean value) throws ModelException {
-		unit.setEnableDefaultBehaviour(value);
+		unit.setDefaultBehaviourEnabled(value);
 		
 	}
 
 	@Override
 	public boolean isDefaultBehaviorEnabled(Unit unit) throws ModelException {
-		return unit.isEnableDefaultBehaviour();
+		return unit.isDefaultBehaviourEnabled();
 	}
 
 }
