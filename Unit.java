@@ -1,10 +1,6 @@
 package hillbillies.model;
 
-import be.kuleuven.cs.som.annotate.*;
-
-import java.util.Arrays.*;
-
-import ogp.framework.util.ModelException;
+import be.kuleuven.cs.som.annotate.*
 
 /**
  * A class of units characterised by their name, position,
@@ -453,12 +449,11 @@ public class Unit {
 	 *       | if(neworientation<0)
 	 *       |    then new.getOrientation ==  (neworientation % 2*PI) +2*PI
 	 */
-	public void setOrientation(double neworientation){
-		
-		neworientation = neworientation % (2*Math.PI);
-		if (neworientation < 0)
-			neworientation = neworientation + 2*Math.PI;
-		this.orientation = neworientation;
+	public void setOrientation(double newOrientation){
+		newOrientation = newOrientation % (2*Math.PI);
+		if (newOrientation < 0)
+			newOrientation = newOrientation + 2*Math.PI;
+		this.orientation = newOrientation;
 	}
 	/*advance time*/
 	/**
@@ -794,9 +789,7 @@ public class Unit {
 	/* Working */
 	/**
 	 * Make the given unit start working.
-	 * 
-	 * @param unit
-	 *      The unit that should start working
+	 *
 	 */
 	public void work(){
 		//werken mogelijk?  (resting mag niet altijd onderbroken?!)
@@ -808,8 +801,6 @@ public class Unit {
 	/**
 	 * Return whether the given unit is currently working.
 	 * 
-	 * @param unit
-	 *            The unit for which to retrieve the state
 	 * @return true if the unit is currently working; false otherwise
 	 */
 	public boolean isWorking(){
