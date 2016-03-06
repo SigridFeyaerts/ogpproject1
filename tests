@@ -1,0 +1,15 @@
+
+	@Test ///oeps ik weet niet wat dit gaat doen eigenlijk
+	public void testSetAboveMaxStaminaPoints() throws ModelException {
+		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3},30 , 30, 30, 30,false);
+		unit.setCurrentStaminaPoints(25);
+		assertEquals("")
+	}
+	@Test
+	public void testSetWeightToLow()throws ModelException{
+		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3}, 90,25, 35, 45, false);
+		facade.setWeight(unit,25);
+		assertEquals("This should be set to the min weight 30",int 30, facade.getWeight(unit));
+	
+	}
+	
