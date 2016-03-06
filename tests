@@ -6,13 +6,21 @@
 		assertEquals("")
 	}
 	@Test
-	public void testSetWeightToLow()throws ModelException{
+	public void testSetWeightToLowAndDefaultBehaviour()throws ModelException{
 		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3}, 90,25, 35, 45, false);
 		facade.setWeight(unit,25);
-		assertEquals("This should be set to the min weight 30",int 30, facade.getWeight(unit));
+		facade.setDefaultBehaviorEnabled(unit, true);
+		
+		assertEquals("This should be set to the min weight 30",int 30, facade.getWeight(unt));
+		assertTrue(facade.isDefaultBehaviorEnabled(unit));
+		assertFalse(facade.isAttacking(unit));
 	
 	}
-	
+	@Test
+	public void testGetMaxHitpoints() throws ModelException{
+		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3} ,  50, 30, 40, 25, false);
+		assertEquals(int 25, facade.getMaxHitPoints(unit));
+	}
 	@Test
 	public void testSpeed()throws ModelException{
 		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3}, 50, 30, 40, 25, false);
