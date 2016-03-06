@@ -1,5 +1,5 @@
 
-	@Test ///oeps ik weet niet wat dit gaat doen eigenlijk
+	@Test 
 	public void testSetAboveMaxStaminaPoints() throws ModelException {
 		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3},30 , 30, 30, 30,false);
 		unit.setCurrentStaminaPoints(25);
