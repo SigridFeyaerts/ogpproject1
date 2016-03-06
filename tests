@@ -13,3 +13,11 @@
 	
 	}
 	
+	@Test
+	public void testSpeed()throws ModelException{
+		Unit unit = facade.createUnit("TestUnit", new int []{19,7,3}, 50, 30, 40, 25, false);
+		facade.createUnit(name, initialPosition, weight, agility, strength, toughness, enableDefaultBehavior)
+		facade.moveToAdjacent(unit, 1, 1,1);
+		facade.advanceTime(unit, 0.13);
+		assertEquals("Current speed must be 0.525", double 0.525 ,facade.getCurrentSpeed(unit));
+	}
