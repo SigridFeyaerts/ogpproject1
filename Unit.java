@@ -396,7 +396,7 @@ public class Unit {
 	 * @post the hitpoints of the unit are set at the given value. 
 	 * 		| new.hitPoints = newHitPoints
 	 */
-	public void setCurrentHitPoints(int newHitPoints){
+	private void setCurrentHitPoints(int newHitPoints){
 		assert newHitPoints >=0;
 		assert newHitPoints <= this.getMaxHitPoints();
 		this.hitPoints = newHitPoints;
@@ -432,7 +432,7 @@ public class Unit {
 	 * @post the stamina points of the unit are equal to the given amount.
 	 *       | new.getStaminaPoints() =  newStaminaPoints
 	 */
-	public void setCurrentStaminaPoints(int newStaminaPoints){
+	private void setCurrentStaminaPoints(int newStaminaPoints){
 		assert newStaminaPoints >=0;
 		assert newStaminaPoints <= this.getMaxStaminaPoints();
 		
@@ -792,7 +792,10 @@ public class Unit {
 	private void takeDamage(Unit attacker) {
 		double damage = attacker.getStrength() / 10.0;
 
-		this.setCurrentHitPoints((int) (hitPoints - damage));
+		if ((hitPoints - damage)>0)
+			this.setCurrentHitPoints((int) (hitPoints - damage));
+		else
+			this.setCurrentHitPoints(0);
 	}
 
 	/**
