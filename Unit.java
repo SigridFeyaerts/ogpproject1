@@ -669,11 +669,36 @@ public class Unit {
 	 *       |  then this.isMoving = true
 	 */
 	public void moveTo(int[] cube) {
-		isWorking=false;isResting=false;isAttacking=false;
-		this.targetPosition= new double[]{cube[0]+lc/2.0,cube[1]+lc/2.0,cube[2]+lc/2.0};
-		isMoving=true;
-		if (enableDefaultBehaviour&&Math.random()>=0.5)
-			isSprinting=true;
+		if ((!this.isWorking)&&(!this.isAttacking)){
+			
+			this.isMoving = true;
+			this.endTargetPosition = new double []{cube[0]+lc/2.0 , cube[1]+lc/2.0, cube[2]+lc/2.0};
+			int x;
+			int y;
+			int z;
+			int[] endTargetCube = this.getCubeCoordinate(this.endTargetPosition);
+			if (this.getCubeCoordinate()[0]== endTargetCube[0])
+				x =0;
+			else if (this.getCubeCoordinate()[0]< endTargetCube[0])
+				x =1;
+			else 
+				x =-1;
+			if (this.getCubeCoordinate()[1]== endTargetCube[1])
+				y =0;
+			else if (this.getCubeCoordinate()[1]<endTargetCube[1])	
+				y = 1;
+			else 
+				y=-1;
+			if (this.getCubeCoordinate()[2]==endTargetCube[2])
+				z =0;
+			else if (this.getCubeCoordinate()[2]< endTargetCube[2])
+				z = 1;
+			else 
+				z = -1;
+			this.moveToAdjacent(x,y,z);
+									
+	        	
+	        }
 	}
 
 	/**
